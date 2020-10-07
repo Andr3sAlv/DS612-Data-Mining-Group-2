@@ -1,9 +1,3 @@
----
-title: "linear regression model"
-author: "jimmy wen"
-date: "2020/10/7"
-output: html_document
----
 clean_data <- read.csv("C:/Users/jimmy/DS612-Data-Mining-Group-2/DS 612 Group Project data set.csv", header = TRUE, na.string="?")
 
 names(clean_data)
@@ -75,3 +69,5 @@ par(mfrow=c(2,2))
 
 #Plot the residual fitted plots
 plot(fit5)
+
+
