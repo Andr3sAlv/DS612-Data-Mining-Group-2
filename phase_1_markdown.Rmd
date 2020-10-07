@@ -1,0 +1,83 @@
+---
+title: 'DS612Group Project Fall 2020: Phase 1'
+author: "Jimmy Wen, Joel Gumm, Seth Hill, Tatiana Macha, Vivienne Zhang"
+date: "10/6/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Cleaning
+We began the data cleaning process by dropping NA values from the data set. From there, we dropped uneccesary columns (id, lat, long) and began searching for outliers by calculating some basic statistics. 
+```{r}
+
+#Load data
+data = read.csv("DS 612 Group Project data set.csv")
+
+#omit na values 
+data = na.omit(data)
+
+#remove unnecessary columns
+data <- data[-c(1, 18, 19)]
+
+#Define quant and qual variables
+quants <- subset(data, select = -date)
+quals <- data$date
+
+#Outlier detection
+multi_func <- function(x){
+  c(min = min(x), mean = mean(x), max = max(x), std_dev = sd(x))
+}
+
+sapply(quants, multi_func)
+#Investigate further: price, bedrooms, yr_renovated
+```
+From this, we found that the variables price and bedrooms required further investigation. 
+ 
+``` {r}
+#Price
+hist(data$price, main = "Histogram of Price", xlab = "Price")
+```
+We plan on using price as our dependent variable in our linear regression problem. After looking at its distribution, we can see that some transformation is required in order to normialze its distribution and make it a worth dependent variable. 
+
+``` {r}
+#logarithmic transformation to fix right skew in outcome variable
+data['log_price'] <- log(data['price'])
+```
+
+After this transformation, the variable is now normally distributed. 
+
+``` {r}
+hist(data$log_price, main = "Histogram of log_price", xlab = "log_price") #normal
+#Redefine quants to include LogPrice
+quants <- subset(data, select =-date)
+
+```
+
+Moving on to bedrooms, when we ran the summary statistics, we could see that there were observations that included houses with 33 bedrooms. Even if houses like these do exist, they are an extreme outlier and should be dropped from our dataset.
+
+``` {r}
+which(data$bedroom == 33)
+data <- data[-c(15871), ]
+```
+
+
+After we handled our outliers, we created dummy variables on the columns we believed would make for satisfactory categorical variables and converted the data variable from char to date type. 
+
+``` {r}
+data["popular"] <- ifelse(data$view >2, 1, 0)
+data["good_condition"] <- ifelse(data$condition >= 3, 1, 0)
+data["high_grade"] <- ifelse(data$grade >= 7, 1, 0)
+
+#Convert dates 
+data$date <- sapply(data$date, substring, 1, 8)
+data$date <- as.Date(data$date, "%Y%m%d", tz = tz)
+```
+
+Finally the cleaned data was written into a .csv file for future use. 
+``` {r}
+write.csv(data, file = "clean_data.csv", col.names = TRUE)
+```
+
