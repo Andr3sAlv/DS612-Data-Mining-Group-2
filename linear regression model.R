@@ -1,4 +1,4 @@
-clean_data <- read.csv("C:/Users/jimmy/DS612-Data-Mining-Group-2/DS 612 Group Project data set.csv", header = TRUE, na.string="?")
+clean_data <- read.csv("C:/Users/jimmy/OneDrive/Desktop/jimmy/DS612-Data-Mining-Group-2/clean_data.csv", header = TRUE, na.string="?")
 
 names(clean_data)
 
