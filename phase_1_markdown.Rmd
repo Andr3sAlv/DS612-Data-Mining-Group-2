@@ -81,3 +81,83 @@ Finally the cleaned data was written into a .csv file for future use.
 write.csv("")
 ```
 
+## Descriptive Statistics
+With the dataset cleaned, we proceeded to describe the data for gathering insights and model building.
+
+Starting with summarizing the cleaned dataset:
+
+``` {r}
+#summary
+summary(data)
+```
+
+Categorical variables like properties presiding on waterfronts, being regarded as a high grade property, or the zipcode in which the property is located can largely be disregarded when evaluating the above summary table.  The importance of this table can be found in the high level overview it provides on variables such as year built, condition, different iterations of square feet, and the presence of properties regarded as high grade.  At a glance we can see a snapshot of our dataset that shows the mean construction year of houses across all markets is 1971, and the mean of properties considered to be high grade (>7) is .89, or 89% of observed properties are considered high grade properties.  Being that our primary function is to show how different factors affect housing prices, we will want to dive further into descriptive methods for directing our models.
+
+Starting next by evaluating a Correlation Matrix of our variables to identify relationships:
+``` {r}
+#correlation matrix of cleaned data
+
+corr <- round(cor(data()),2)
+corrplot(corr,method ="circle")
+```
+
+The high correlation between log price and price can be disregarded due to its function being for normality.*
+
+From the start we can see that price has the highest positive correlation with the square feet of the living area for a property. For every one digit increase in square feet of the living area, we could expect a 0.7 increase in the price of the property. The grade of the property also has a relatively high positive correlation, with a value of 0.67. By no means conclusive on what to use as predictors, these moderately high correlations give us hints of where we should direct our initial investigations.
+
+Since Grade is a discrete variable, it lends itself more easily to gathering insights from reviewing the frequency of different property grades.
+``` {r}
+#Frequency Table for Grade
+
+t <- as.data.frame(table(data$grade))
+names(t)[1]='grade'
+t
+
+```
+This is information which simply using a correlation matrix could not provide. The majority of observations lie between bins 7 and 8 for grade; making the vast majority of properties high grade properties, but still very close to the cutoff. It should come as no surprise that as Grade increases, the amount of observations sharply decline.
+
+Now we will look at the average prices for the different Grade groups.
+``` {r}
+#Average price per grade class 
+
+a <- aggregate(data$price ~ data$grade, FUN = mean)
+names(a)[1] = "Grade"
+names(a)[2] = "Avg Price"
+a
+
+```
+
+As could be expected, price increases as Grade increases, which was observed in the correlation matrix. The differences for every grade increase sub 7 is quite marginal. After arriving at high grade properties, which are 7 and above, an exponential price increase can be observed.
+
+For continuous variables, the relationship to price can be better understood with the scatter plots below.
+``` {r}
+#Sqft_living vs Avg price
+plot(data$sqft_living, data$price)
+#sqft_basement class
+plot(data$sqft_basemen, data$price)
+```
+Living squarefeet increases with price, but the spread also increases. 
+
+While minor changes in price as basement square feet increase can be observed, it would at most be a weak positive correlation. 
+
+
+``` {r}
+#Histogram of grade 
+
+#histogram of sqft_living
+hist(data$sqft_living, 
+     main = "Histogram of Sqft_Living",
+     xlab = "Housing Sqft_Living",
+     ylab = "Frequency")
+
+```
+This histogram shows more succinctly the distribution of living space sizes. The largest group falling in the 1500-3000 sqft range. 
+
+
+Viewing this relationship from a distributions view, we see the spread of the data increases dramatically once you reach the high grade level. 
+``` {r}
+plot(factor(data$grade),data$price,
+     main = "Box Plot of Price vs. Grade",
+     xlab = "Grade",
+     ylab = "Price")
+```
