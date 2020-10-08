@@ -81,3 +81,146 @@ Finally the cleaned data was written into a .csv file for future use.
 write.csv(data, file = "clean_data.csv", col.names = TRUE)
 ```
 
+## Descriptive Statistics
+With the dataset cleaned, we proceeded to describe the data for gathering insights and model building.
+
+Starting with summarizing the cleaned dataset:
+
+``` {r}
+#summary
+summary(clean_data)
+```
+
+Frequency tables:
+``` {r}
+#Frequency Table for Grade
+
+t <- as.data.frame(table(data$grade))
+names(t)[1]='grade'
+t
+
+#Frequency Table for sqft_living
+u <- as.data.frame(table(data$sqft_living))
+names(u)[1]='Square Foot of Living'
+u
+
+#Frequency Table for sqft_above
+v <- as.data.frame(table(data$sqft_above))
+names(v)[1]='Square Foot above'
+v
+
+#Frequency Table for Price
+w <- as.data.frame(table(data$price))
+names(w)[1]='Price'
+w
+```
+
+Correlation Matrix:
+``` {r}
+#correlation matrix of cleaned data
+
+corr <- round(cor(data),2)
+corrplot (corr,method ="circle")
+```
+
+Average pricing in relation to a key identified variables:
+``` {r}
+#Average price per grade class 
+
+a <- aggregate(data$price ~ data$grade, FUN = mean)
+names(a)[1] = "Grade"
+names(a)[2] = "Avg Price"
+a
+
+#Average price per sqft_living class 
+b <- aggregate(data$price ~ data$sqft_living, FUN = mean)
+names(b)[1] = "Square Foot of Living"
+names(b)[2] = "Avg Price"
+b
+
+#Average price per sqft_above class 
+a <- aggregate(data$price ~ data$sqft_above, FUN = mean)
+names(a)[1] = "Sqft Above"
+names(a)[2] = "Avg Price"
+a
+
+#Average price per sqft_basement class
+b <- aggregate(data$price ~ data$sqft_basement, FUN = mean)
+names(a)[1] = "Sqft Basement"
+names(a)[2] = "Avg Price"
+b
+```
+
+Scatter plots for above variables and price
+``` {r}
+#Grade vs price Avg Price
+plot(data$grade,data$price)
+#Sqft_living vs Avg price
+plot(data$sqft_living, data$price)
+#sqft_above class
+plot(data$sqft_above, data$price)
+#sqft_basement class
+plot(data$sqft_basemen, data$price)
+```
+
+Histograms:
+``` {r}
+#Histogram of grade 
+hist(data$grade, 
+     main = "Histogram of Housing Grade",
+     xlab = "Housing Grade",
+     ylab = "Frequency")
+#histogram of sqft_living
+hist(data$sqft_living, 
+     main = "Histogram of Sqft_Living",
+     xlab = "Housing Sqft_Living",
+     ylab = "Frequency")
+#histogram of sqft_above
+hist(data$sqft_above, 
+     main = "Histogram of Sqft_Above",
+     xlab = "Housing Sqft_Above",
+     ylab = "Frequency")
+```
+
+Barplots:
+``` {r}
+#housing grade
+barplot(table(data$grade),
+        main = "Bar Chart of Housing Grade",
+        xlab = "Housing Grade",
+        ylab = "Frequency")
+#square feet - living
+barplot(table(data$sqft_living),
+        main = "Bar Chart of sqft_living",
+        xlab = "sqft_living",
+        ylab = "Frequency")
+#square feet - above ground
+barplot(table(data$sqft_above),
+        main = "Bar Chart of sqft_above",
+        xlab = "sqft_above",
+        ylab = "Frequency")
+#Price
+barplot(table(data$price),
+        main = "Bar Chart of price",
+        xlab = "Price",
+        ylab = "Frequency")
+```
+
+Box plots:
+``` {r}
+#Box of grade and price
+plot(factor(data$grade),data$price,
+     main = "Box Plot of Price vs. Grade",
+     xlab = "Grade",
+     ylab = "Price")
+#Box of sqft_living and price
+plot(factor(data$sqft_living),data$price,
+     main = "Box Plot of Price vs. sqft_living",
+     xlab = "sqft_living",
+     ylab = "Price")
+#Box of sqft_above and price
+plot(factor(data$sqft_above),data$price,
+     main = "Box Plot of Price vs. sqft_above",
+     xlab = "sqft_above",
+     ylab = "Price")
+```
