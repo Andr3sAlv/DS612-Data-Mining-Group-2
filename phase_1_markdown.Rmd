@@ -40,7 +40,7 @@ From this, we found that the variables price and bedrooms required further inves
 #Price
 hist(data$price, main = "Histogram of Price", xlab = "Price")
 ```
-We plan on using price as our dependent variable in our linear regression problem. After looking at its distribution, we can see that some transformation is required in order to normialze its distribution and make it a worth dependent variable. 
+We plan on using price as our dependent variable in our linear regression problem. After looking at its distribution, we can see that some transformation are required in order to normalize its distribution and make it a worthy dependent variable. 
 
 ``` {r}
 #logarithmic transformation to fix right skew in outcome variable
@@ -64,7 +64,7 @@ data <- data[-c(15871), ]
 ```
 
 
-After we handled our outliers, we created dummy variables on the columns we believed would make for satisfactory categorical variables and converted the data variable from char to date type. 
+After we handled our outliers, we created dummy variables on the columns we believed would make for satisfactory categorical variables and converted theirt data type from char to date.
 
 ``` {r}
 data["popular"] <- ifelse(data$view >2, 1, 0)
@@ -78,6 +78,6 @@ data$date <- as.Date(data$date, "%Y%m%d", tz = tz)
 
 Finally the cleaned data was written into a .csv file for future use. 
 ``` {r}
-write.csv(data, file = "clean_data.csv", col.names = TRUE)
+write.csv("")
 ```
 
